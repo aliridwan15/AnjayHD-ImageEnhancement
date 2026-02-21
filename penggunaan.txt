@@ -1,0 +1,65 @@
+===========================================
+   Image HD Enhancement - Usage Guide
+===========================================
+
+FUNGSI:
+- Restorasi HD (Super Resolution)
+- Pewarnaan Foto Hitam Putih
+- Kombinasi: Warnai + HD
+
+----------------------------------------
+MENGGUNAKAN CLI (Terminal)
+----------------------------------------
+
+Format:
+    python image_enhancer.py [input] [output] [options]
+
+Contoh Dasar:
+    python image_enhancer.py foto.jpg hasil.jpg
+
+Mode Operasional:
+    --mode enhance   # Restorasi HD saja (untuk foto berwarna)
+    --mode colorize  # Pewarnaan saja (untuk foto BW)
+    --mode both      # Warnai + Restorasi HD
+
+Contoh Lengkap:
+    python image_enhancer.py foto.jpg hasil.jpg --mode both --scale 4
+
+Options:
+    --scale 2   # Pembesaran 2x
+    --scale 4   # Pembesaran 4x (default)
+
+----------------------------------------
+MENGGUNAKAN WEB (Flask)
+----------------------------------------
+
+1. Install Flask:
+    pip install flask
+
+2. Jalankan server:
+    python app.py
+
+3. Buka browser:
+    http://localhost:5000
+
+Fitur Web:
+    - Drag & Drop upload
+    - Pilih mode (HD/Coloring/Kombinasi)
+    - Pilih skala (2x/4x)
+    - Preview Before & After
+    - Download hasil
+
+----------------------------------------
+STRUKTUR FOLDER
+----------------------------------------
+
+    ImageHD/
+    ├── image_enhancer.py    # Script utama CLI
+    ├── app.py               # Flask Backend
+    ├── templates/
+    │   └── index.html       # Frontend Web
+    ├── input/               # Folder input
+    ├── output/              # Folder output
+    └── models/              # Model AI
+
+===========================================

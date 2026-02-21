@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnjayHD - Image Enhancement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+        }
+        
+        :root {
+            --sakura-pink: #ffb7c5;
+            --sakura-light: #ffe4e9;
+            --japan-red: #c41e3a;
+            --dark-navy: #1a1a2e;
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #16162a;
+            --bg-card: rgba(255, 183, 197, 0.08);
+            --border-color: rgba(255, 183, 197, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #c41e3a;
+            --accent-light: #ff6b81;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #f8f4f5;
+            --bg-secondary: #f0e8eb;
+            --bg-card: rgba(196, 30, 58, 0.08);
+            --border-color: rgba(196, 30, 58, 0.2);
+            --text-primary: #1a1a2e;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #c41e3a;
+            --accent-light: #e11d48;
+        }
+        
+        body {
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+            color: var(--text-primary);
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+        
+        .hero-gradient {
+            background: transparent;
+        }
+        
+        .japanese-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--border-color) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, var(--border-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        [data-theme="light"] .japanese-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(196, 30, 58, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(196, 30, 58, 0.1) 1px, transparent 1px);
+        }
+        
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+        
+        .card:hover {
+            background: rgba(255, 183, 197, 0.15);
+            border-color: rgba(255, 183, 197, 0.4);
+        }
+        
+        [data-theme="light"] .card:hover {
+            background: rgba(196, 30, 58, 0.15);
+            border-color: rgba(196, 30, 58, 0.4);
+        }
+        
+        .text-gray-300, .text-gray-200, .text-gray-400 {
+            color: var(--text-secondary) !important;
+        }
+        
+        [data-theme="light"] .text-gray-500 {
+            color: var(--text-muted) !important;
+        }
+        
+        .sakura-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .sakura {
+            position: absolute;
+            top: -50px;
+            width: 30px;
+            height: 30px;
+            background-image: url('/sakura.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                top: -50px;
+                transform: translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.9;
+            }
+            95% {
+                opacity: 0.7;
+            }
+            100% {
+                top: 110vh;
+                transform: translateX(var(--drift, 50px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b81 0%, #c41e3a 50%, #ff8fa3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(196, 30, 58, 0.5);
+            filter: drop-shadow(0 0 10px rgba(255, 107, 129, 0.4));
+        }
+        
+        .drop-zone {
+            border: 2px dashed var(--accent);
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent-light);
+            background: rgba(196, 30, 58, 0.1);
+            transform: scale(1.01);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(196, 30, 58, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--accent-light);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        [data-theme="light"] .spinner {
+            border-top-color: var(--accent);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: rgba(255, 183, 197, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 183, 197, 0.2);
+        }
+        
+        .card:hover {
+            background: rgba(255, 183, 197, 0.15);
+            border-color: rgba(255, 183, 197, 0.4);
+        }
+        
+        .japanese-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 183, 197, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(255, 183, 197, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23c41e3a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            appearance: none;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .jp-badge {
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.3) 0%, rgba(255, 107, 129, 0.2) 100%);
+            border: 1px solid var(--border-color);
+        }
+        
+        [data-theme="light"] .jp-badge {
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.15) 0%, rgba(225, 29, 72, 0.1) 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(196, 30, 58, 0.5);
+            filter: drop-shadow(0 0 10px rgba(255, 107, 129, 0.4));
+        }
+        
+        select {
+            background-color: var(--bg-card);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--border-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        [data-theme="light"] .bg-slate-800, [data-theme="light"] .bg-slate-800\/80 {
+            background-color: rgba(196, 30, 58, 0.1) !important;
+        }
+        
+        [data-theme="light"] select {
+            background-color: rgba(196, 30, 58, 0.1) !important;
+        }
+        
+        [data-theme="light"] .min-h-screen {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="light"] .text-white {
+            color: var(--text-primary) !important;
+        }
+        
+        .btn-primary {
+            color: white;
+        }
+
+        .footer-text {
+            font-family: 'Zen Maru Gothic', cursive;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .faq-question {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--accent-light);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-answer.open {
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body class="hero-gradient japanese-pattern min-h-screen" data-theme="dark" style="background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%); min-height: 100vh;">
+    <!-- Sakura Animation -->
+    <div class="sakura-bg" id="sakuraContainer"></div>
+    
+    <div class="content-wrapper">
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="fixed top-4 right-4 z-50 p-3 rounded-full bg-slate-800/50 border border-rose-500/30 hover:bg-slate-700/50 transition-all duration-300" title="Toggle Theme">
+            <svg id="moonIcon" class="w-5 h-5 text-rose-300" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+            </svg>
+            <svg id="sunIcon" class="w-5 h-5 text-amber-400 hidden" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+            </svg>
+        </button>
+    
+        <!-- Hero Section -->
+        <header class="container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-block px-4 py-2 rounded-full jp-badge text-sm mb-6" style="color: var(--text-secondary);">
+                    <span class="mr-2">✨</span> Image Enhancement
+                </div>
+                
+                <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tight">
+                    <span class="gradient-text">AnjayHD</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl mb-4 font-light" style="color: var(--text-secondary);">
+                   Tingkatkan kualitas foto lama kamu jadi HD profesional dengan teknologi terkini
+                </p>
+                
+                <p class="mb-12 max-w-2xl mx-auto" style="color: var(--text-muted);">
+                    Tiga kemampuan dalam satu platform:
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-6 text-left">
+                    <div class="card feature-card rounded-2xl p-6 transition" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        <div class="text-4xl mb-3">🔍</div>
+                        <h3 class="text-lg font-semibold mb-2" style="color: var(--accent-light);">Super Resolution</h3>
+                        <p class="text-sm" style="color: var(--text-muted);">Perjelas foto yang pecah atau buram menjadi gambar HD yang tajam</p>
+                    </div>
+                    
+                    <div class="card feature-card rounded-2xl p-6 transition" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        <div class="text-4xl mb-3">🎨</div>
+                        <h3 class="text-lg font-semibold mb-2" style="color: var(--accent-light);">Warna Foto</h3>
+                        <p class="text-sm" style="color: var(--text-muted);">Warna foto hitam putih jadul jadi hidup kembali</p>
+                    </div>
+                    
+                    <div class="card feature-card rounded-2xl p-6 transition" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        <div class="text-4xl mb-3">✨</div>
+                        <h3 class="text-lg font-semibold mb-2" style="color: var(--accent-light);">Kombinasi</h3>
+                        <p class="text-sm" style="color: var(--text-muted);">Warnai & HD-kan sekaligus dalam satu proses</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 pb-20">
+            <div class="max-w-3xl mx-auto">
+                <!-- Upload Area -->
+                <div class="card rounded-3xl p-8 md:p-12" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <div id="dropZone" class="drop-zone rounded-2xl p-12 text-center cursor-pointer" style="background: var(--bg-secondary);">
+                        <div class="text-6xl mb-4">📁</div>
+                        <p class="text-xl font-medium mb-2" style="color: var(--text-secondary);">
+                            Drag & Drop foto kamu di sini
+                        </p>
+                        <p class="mb-6" style="color: var(--text-muted);">atau</p>
+                        <button type="button" class="btn-primary px-8 py-3 rounded-full text-white font-semibold">
+                            Pilih Foto
+                        </button>
+                        <input type="file" id="fileInput" class="hidden" accept="image/*">
+                    </div>
+                    
+<!-- File Info -->
+                <div id="fileInfo" class="hidden mt-6 p-4 bg-rose-500/10 rounded-xl" style="background-color: var(--bg-card);">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🖼️</span>
+                                <div>
+<p id="fileName" class="font-medium">filename.jpg</p>
+                                <p id="fileSize" class="text-sm" style="color: var(--text-muted);">0 KB</p>
+                                </div>
+                            </div>
+                            <button id="removeFile" class="text-gray-400 hover:text-red-400 transition">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Controls -->
+                    <div id="controls" class="hidden mt-8">
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <!-- Mode Dropdown -->
+                            <div>
+                                <label class="block text-sm font-medium mb-3" style="color: var(--text-secondary);">
+                                    Mode Processing
+                                </label>
+                                <select id="modeSelect" class="w-full px-4 py-3 rounded-xl focus:outline-none" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                                    <option value="enhance">📸 Foto HD</option>
+                                    <option value="colorize">🎨 Coloring Foto</option>
+                                    <option value="both">✨ Kombinasi Keduanya</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Scale Dropdown -->
+                            <div>
+                                <label class="block text-sm font-medium mb-3" style="color: var(--text-secondary);">
+                                    Skala Pembesaran
+                                </label>
+                                <select id="scaleSelect" class="w-full px-4 py-3 rounded-xl focus:outline-none" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                                    <option value="4">📈 Scale 4x (HD Max)</option>
+                                    <option value="2">📊 Scale 2x (Cepat)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Process Button -->
+                        <button id="processBtn" class="btn-primary w-full py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-3">
+                            <span>⚡ Proses Gambar</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Loading -->
+                    <div id="loading" class="hidden mt-8 text-center py-8">
+                        <div class="spinner mx-auto mb-4 w-10 h-10"></div>
+                        <p class="text-lg font-medium" style="color: var(--accent-light);">Sedang memproses...</p>
+                        <p class="text-sm" style="color: var(--text-muted);">Tunggu sebentar ya</p>
+                    </div>
+                    
+                    <!-- Result -->
+                    <div id="result" class="hidden mt-8 fade-in">
+                        <div class="text-center mb-6">
+                            <span class="text-4xl">✅</span>
+                            <p class="text-lg font-medium mt-2" id="resultMessage" style="color: var(--accent-light);">Gambar berhasil diproses!</p>
+                        </div>
+                        
+                        <!-- Preview -->
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <p class="text-sm mb-2 text-center" style="color: var(--text-muted);">Sebelum</p>
+                            <div class="rounded-xl p-2" style="background: var(--bg-secondary);">
+                                    <img id="beforeImg" class="w-full rounded-lg" src="" alt="Before">
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-sm mb-2 text-center" style="color: var(--text-muted);">Sesudah</p>
+                                <div class="rounded-xl p-2" style="background-color: var(--bg-card);">
+                                    <img id="afterImg" class="w-full rounded-lg" src="" alt="After">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Download Button -->
+                        <a id="downloadBtn" href="#" download class="btn-primary block w-full py-4 rounded-xl text-white font-bold text-lg text-center">
+                            ⬇️ Download Hasil
+                        </a>
+                    </div>
+                    
+                    <!-- Error -->
+                    <div id="error" class="hidden mt-8 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+                        <p class="text-red-300 text-center" id="errorMessage">Terjadi kesalahan</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer & FAQ -->
+        <section class="container mx-auto px-4 pb-12">
+            <div class="card rounded-3xl p-8" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Left: Made By -->
+                    <div class="flex flex-col justify-center items-center md:items-start text-center md:text-left">
+                        <p class="footer-text text-sm mb-3" style="color: var(--text-muted);">
+                            dilakukan ketika gabut
+                        </p>
+                        <p class="text-2xl font-bold mb-2" style="background: linear-gradient(135deg, #ff6b81 0%, #c41e3a 50%, #ff8fa3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                            Made By
+                        </p>
+                        <p class="text-3xl font-black tracking-wide" style="color: var(--text-primary);">
+                            Ali Ridwan Nurhasan
+                        </p>
+                        <p class="mt-4 text-sm" style="color: var(--text-muted);">
+                            © 2026 AnjayHD • All rights reserved
+                        </p>
+                    </div>
+                    
+                    <!-- Right: FAQ -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-6" style="color: var(--accent-light);">FAQ</h3>
+                        <div class="space-y-3">
+                            <div class="faq-item py-3">
+                                <div class="faq-question flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                                    <span class="font-medium text-sm" style="color: var(--text-secondary);">Apa saja fitur AnjayHD?</span>
+                                    <svg class="w-4 h-4 transition-transform duration-300" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer mt-2 overflow-hidden transition-max-height duration-300">
+                                    <p class="text-sm" style="color: var(--text-muted);">3 fitur: Super Resolution, Coloring, dan Kombinasi keduanya.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item py-3">
+                                <div class="faq-question flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                                    <span class="font-medium text-sm" style="color: var(--text-secondary);">Skala pembesaran tersedia?</span>
+                                    <svg class="w-4 h-4 transition-transform duration-300" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer mt-2 overflow-hidden transition-max-height duration-300">
+                                    <p class="text-sm" style="color: var(--text-muted);">2x (cepat) dan 4x (HD max).</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item py-3">
+                                <div class="faq-question flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                                    <span class="font-medium text-sm" style="color: var(--text-secondary);">Format yang didukung?</span>
+                                    <svg class="w-4 h-4 transition-transform duration-300" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer mt-2 overflow-hidden transition-max-height duration-300">
+                                    <p class="text-sm" style="color: var(--text-muted);">PNG, JPG, JPEG, dan WebP.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="faq-item py-3">
+                                <div class="faq-question flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                                    <span class="font-medium text-sm" style="color: var(--text-secondary);">Apakah foto saya aman?</span>
+                                    <svg class="w-4 h-4 transition-transform duration-300" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer mt-2 overflow-hidden transition-max-height duration-300">
+                                    <p class="text-sm" style="color: var(--text-muted);">Ya, foto dihapus otomatis setelah proses.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('svg');
+            
+            if (answer.classList.contains('open')) {
+                answer.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                answer.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+        
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const moonIcon = document.getElementById('moonIcon');
+        const sunIcon = document.getElementById('sunIcon');
+        const html = document.documentElement;
+        
+        // Check saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcons(savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcons(newTheme);
+        });
+        
+        function updateThemeIcons(theme) {
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+        }
+        
+        // Generate Sakura
+        function createSakura() {
+            const container = document.getElementById('sakuraContainer');
+            const sakuraCount = 40;
+            
+            for (let i = 0; i < sakuraCount; i++) {
+                const sakura = document.createElement('div');
+                sakura.className = 'sakura';
+                
+                const startX = (Math.random() * 100) + '%';
+                const drift = (Math.random() * 100 - 50) + 'px';
+                const duration = 8 + Math.random() * 12;
+                const delay = Math.random() * -15;
+                const size = 15 + Math.random() * 25;
+                
+                sakura.style.left = startX;
+                sakura.style.setProperty('--drift', drift);
+                sakura.style.animationDuration = duration + 's';
+                sakura.style.animationDelay = delay + 's';
+                sakura.style.width = size + 'px';
+                sakura.style.height = size + 'px';
+                sakura.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                container.appendChild(sakura);
+            }
+        }
+        
+        createSakura();
+        
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const removeFile = document.getElementById('removeFile');
+        const controls = document.getElementById('controls');
+        const modeSelect = document.getElementById('modeSelect');
+        const scaleSelect = document.getElementById('scaleSelect');
+        const processBtn = document.getElementById('processBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const beforeImg = document.getElementById('beforeImg');
+        const afterImg = document.getElementById('afterImg');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resultMessage = document.getElementById('resultMessage');
+        const error = document.getElementById('error');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        let selectedFile = null;
+        let outputFilename = null;
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('File harus berupa画像 (gambar)');
+                return;
+            }
+            
+            selectedFile = file;
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            dropZone.classList.add('hidden');
+            fileInfo.classList.remove('hidden');
+            controls.classList.remove('hidden');
+            result.classList.add('hidden');
+            error.classList.add('hidden');
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                beforeImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        removeFile.addEventListener('click', () => {
+            selectedFile = null;
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+            controls.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            result.classList.add('hidden');
+            error.classList.add('hidden');
+        });
+        
+        processBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('mode', modeSelect.value);
+            formData.append('scale', scaleSelect.value);
+            
+            controls.classList.add('hidden');
+            loading.classList.remove('hidden');
+            result.classList.add('hidden');
+            error.classList.add('hidden');
+            
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                loading.classList.add('hidden');
+                
+                if (data.success) {
+                    outputFilename = data.output_file;
+                    afterImg.src = `/preview/${outputFilename}`;
+                    downloadBtn.href = `/download/${outputFilename}`;
+                    resultMessage.textContent = data.message;
+                    result.classList.remove('hidden');
+                } else {
+                    showError(data.error);
+                    controls.classList.remove('hidden');
+                }
+            } catch (err) {
+                loading.classList.add('hidden');
+                showError('エラー: ' + err.message);
+                controls.classList.remove('hidden');
+            }
+        });
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            error.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
