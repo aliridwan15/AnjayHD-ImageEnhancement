@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/Python-3.8+-blue?style=flat&logo=python" alt="Python">
   <img src="https://img.shields.io/badge/Flask-2.0+-white?style=flat&logo=flask" alt="Flask">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat">
-  <img src="https://img.shields.io/github/stars/aliridwan/anjayhd?style=flat" alt="Stars">
+  <img src="https://img.shields.io/github/stars/aliridwan15/AnjayHD-ImageEnhancement?style=flat" alt="Stars">
 </p>
 
 <p align="center">
@@ -26,7 +26,7 @@ Perjelas foto yang pecah atau buram menjadi gambar HD yang tajam menggunakan tek
 
 | Sebelum | Sesudah |
 |:-------:|:-------:|
-| <img src=".github/images/before-enhance.jpg" width="300"> | <img src=".github/images/after-enhance.jpg" width="300"> |
+| <img src=".github/images/before-enhance.png" width="300"> | <img src=".github/images/after-enhance.png" width="300"> |
 
 **Hasil:** Foto buram menjadi tajam dengan detail yang terjaga hingga 4x skala pembesaran.
 
@@ -37,7 +37,7 @@ Warna foto hitam putih jadul jadi hidup kembali dengan teknologi AI colorization
 
 | Sebelum (BW) | Sesudah (Warna) |
 |:------------:|:---------------:|
-| <img src=".github/images/before-colorize.jpg" width="300"> | <img src=".github/images/after-colorize.jpg" width="300"> |
+| <img src=".github/images/before-colorize.png" width="300"> | <img src=".github/images/after-colorize.png" width="300"> |
 
 **Hasil:** Foto hitam putih otomatis diwarnai dengan akurat.
 
@@ -48,7 +48,7 @@ Warnai & HD-kan sekaligus dalam satu proses untuk hasil maksimal.
 
 | Sebelum | Sesudah |
 |:-------:|:-------:|
-| <img src=".github/images/before-both.jpg" width="300"> | <img src=".github/images/after-both.jpg" width="300"> |
+| <img src=".github/images/before-both.png" width="300"> | <img src=".github/images/after-both.png" width="300"> |
 
 **Hasil:** Foto lama hitam putih menjadi HD berwarna.
 
@@ -73,7 +73,7 @@ Warnai & HD-kan sekaligus dalam satu proses untuk hasil maksimal.
 
 ```bash
 # Clone repository
-git clone https://github.com/aliridwan/anjayhd.git
+git clone https://github.com/aliridwan15/AnjayHD-ImageEnhancement.git
 cd anjayhd
 
 # Install dependencies
@@ -174,9 +174,7 @@ MIT License - lihat [LICENSE](LICENSE) untuk detail.
 ---
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=aliridwan&repo=anjayhd&label=Views&color=ff6b81&style=flat" alt="Profile views">
+  <img src="https://komarev.com/ghpvc/?username=aliridwan15&repo=AnjayHD-ImageEnhancement&label=Views&color=ff6b81&style=flat" alt="Profile views">
 </p>
 
-<p align="center">
-  <sub>Dibuat dengan ❤️ dan 🌸</sub>
-</p>
+

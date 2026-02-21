@@ -78,14 +78,6 @@ def process_image():
             timeout=300
         )
         
-        # Log untuk debugging
-        log_path = os.path.join(SCRIPT_DIR, "debug.log")
-        with open(log_path, "w", encoding="utf-8") as f:
-            f.write(f"Command: {' '.join(cmd)}\n")
-            f.write(f"Return code: {result.returncode}\n")
-            f.write(f"STDOUT:\n{result.stdout}\n")
-            f.write(f"STDERR:\n{result.stderr}\n")
-        
         if result.returncode != 0:
             error_msg = result.stderr if result.stderr else result.stdout
             return jsonify({'error': f'Proses gagal: {error_msg}'}), 500
