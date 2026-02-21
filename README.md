@@ -1,14 +1,14 @@
 # ✨ AnjayHD - Image Enhancement
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.8+-blue?style=flat&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/Flask-2.0+-white?style=flat&logo=flask" alt="Flask">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat">
-  <img src="https://img.shields.io/github/stars/aliridwan15/AnjayHD-ImageEnhancement?style=flat" alt="Stars">
+  <img src="https://img.shields.io/badge/Python-3.8+-blue?style=flat&logo=python" alt="Python">
+  <img src="https://img.shields.io/badge/Flask-2.0+-white?style=flat&logo=flask" alt="Flask">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat">
+  <img src="https://img.shields.io/github/stars/aliridwan15/AnjayHD-ImageEnhancement?style=flat" alt="Stars">
 </p>
 
 <p align="center">
-  <img src=".github/images/hero-preview.png" alt="AnjayHD Preview" width="800">
+  <img src=".github/images/hero-preview.png" alt="AnjayHD Preview" width="600">
 </p>
 
 ---
@@ -67,13 +67,13 @@ Warnai & HD-kan sekaligus dalam satu proses untuk hasil maksimal.
 
 ### Prerequisites
 - Python 3.8+
-- Windows/Linux dengan GPU (opsional untuk kecepatan)
+- Windows dengan GPU (opsional untuk kecepatan)
 
 ### Steps
 
 ```bash
 # Clone repository
-git clone https://github.com/aliridwan15/AnjayHD-ImageEnhancement.git
+git clone [https://github.com/aliridwan15/AnjayHD-ImageEnhancement.git](https://github.com/aliridwan15/AnjayHD-ImageEnhancement.git)
 cd anjayhd
 
 # Install dependencies
@@ -81,100 +81,3 @@ pip install -r requirements.txt
 
 # Jalankan aplikasi
 python app.py
-```
-
-Buka browser: **http://localhost:5000**
-
----
-
-## 💻 Penggunaan
-
-### Melalui Web Interface
-
-1. **Buka** http://localhost:5000
-2. **Drag & Drop** foto kamu ke zona upload
-3. **Pilih Mode:**
-   - 📸 `Foto HD` - Super Resolution
-   - 🎨 `Coloring Foto` - Pewarnaan BW
-   - ✨ `Kombinasi` - Keduanya sekaligus
-4. **Pilih Skala:** 2x (Cepat) atau 4x (HD Max)
-5. **Klik** "Proses Gambar"
-6. **Download** hasil
-
-### Melalui CLI
-
-```bash
-# HD Enhancement saja
-python image_enhancer.py input.jpg output.jpg --mode enhance --scale 4
-
-# Pewarnaan saja
-python image_enhancer.py input.jpg output.jpg --mode colorize
-
-# Keduanya
-python image_enhancer.py input.jpg output.jpg --mode both --scale 4
-```
-
----
-
-## 📁 Struktur Project
-
-```
-anjayhd/
-├── app.py                     # Flask web server
-├── image_enhancer.py          # CLI image processing
-├── proses_hd_ncnn.py          # NCNN processing
-├── warnai_foto.py             # Colorization
-├── templates/
-│   └── index.html             # Frontend UI
-├── models/                    # AI models
-│   └── models/                # Real-ESRGAN models
-├── input/                     # Input images
-├── output/                    # Output images
-└── penggunaan.txt             # Usage guide (ID)
-```
-
----
-
-## 🧰 Tech Stack
-
-| Komponen | Teknologi |
-|----------|-----------|
-| Frontend | HTML, CSS, Tailwind, JavaScript |
-| Backend | Python, Flask |
-| AI/ML | Real-ESRGAN, OpenCV, NumPy |
-| Image Processing | PIL, ncnn Vulkan |
-
----
-
-## 📸 Screenshot
-
-<p align="center">
-  <img src=".github/images/screenshot-ui.png" alt="UI Screenshot" width="800">
-</p>
-
----
-
-## 🤝 Kontribusi
-
-Contributions are welcome! Silakan fork repository ini dan buat pull request.
-
----
-
-## 📝 Lisensi
-
-MIT License - lihat [LICENSE](LICENSE) untuk detail.
-
----
-
-## 🙏 Credits
-
-- **Made by** Ali Ridwan Nurhasan
-- Dilakukan ketika gabut 😴
-
----
-
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=aliridwan15&repo=AnjayHD-ImageEnhancement&label=Views&color=ff6b81&style=flat" alt="Profile views">
-</p>
-
-
